@@ -1,10 +1,13 @@
 import './App.css';
+import Footer from './Components/Footer';
 import Navbar from './Components/Navbar';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import SignUp from './Components/Signup';
 
 function App() {
   return (
-    <div className="App">
+    <div>
+      {/* <h1>E-commerce</h1> */}
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -13,9 +16,10 @@ function App() {
           <Route path="/update" element={<h1>Prwe oduct Listing</h1>} />
           <Route path="/logout" element={<h1>Psroduct Listing</h1>} />
           <Route path="/profile" element={<h1>Prweoduct Listing</h1>} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
-        <h1>E-commerce</h1>
       </BrowserRouter>
+      <Footer />
     </div>
   );
 }
