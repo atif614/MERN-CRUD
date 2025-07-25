@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 require("./db/config");
 const User = require("./users/users");
+const Product = require("./products/product");
 app.use(express.json());
 app.use(cors());
 
@@ -40,6 +41,40 @@ app.post("/login",async(req,res)=>{
     else{
         return res.json({ error: 'No User Found' });
     }
-;})
+})
+
+app.post("/add-product",async(req,res)=>{
+    let product = new Product(req.body);
+    let result = await product.save();
+  const formattedCreatedAt = new Date(product.createdAt).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+
+    const formattedUpdatedAt = new Date(product.updatedAt).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+    return res.json({result,formattedCreatedAt,formattedUpdatedAt});
+})
 
 app.listen(5000);
+
+
+
+
+
+
+
+
+
+
+

@@ -9,7 +9,7 @@ const Navbar = () => {
     const logout = ()=>{
         console.warn("logout function");
         localStorage.clear();
-        navigate("/signup");
+        navigate("/login    `");
     }
     return (
         <div>
@@ -19,7 +19,16 @@ const Navbar = () => {
                 <li> <Link to="/update">Update Product</Link></li>
                 {/* <li> <Link to="/logout">Logout</Link></li> */}
                 <li> <Link to="/login">Login</Link></li>
-                <li> {auth ? <Link onClick={logout}>Logout</Link> : <Link to="/signup">Sign Up</Link>} </li>
+                {/* <li> {auth ? <Link onClick={logout}>Logout</Link> : <Link to="/signup">Sign Up</Link>} </li> */}
+
+                {
+                    auth ? <li> <Link onClick={logout}>Logout</Link> </li>
+                     :
+                    <div>
+                         <li> <Link to="/login">Login</Link></li>
+                     <li> <Link to="/signup">Sign Up</Link> </li>
+                    </div>
+                }
             </ul>
         </div>
     )
