@@ -4,6 +4,7 @@ import Navbar from './Components/Navbar';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SignUp from './Components/Signup';
 import PrivateComponent from './Components/PrivateComponent';
+import Login from './Components/Login';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           </Route>
 
           <Route path="/signup" element={<SignUp />} />
+          <Route path='/login' element={<Login/>} />
         </Routes>
       </BrowserRouter>
       <Footer />
