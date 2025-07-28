@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
@@ -8,7 +8,15 @@ export default function LoginPage() {
   const [showLoader,setShowLoader] = useState(false);
 
   const navigate = useNavigate();
-
+   const auth = localStorage.getItem("user");
+  
+      useEffect(() => {
+          console.log("Inside")
+          if (auth) {
+              navigate("/");
+          }
+          // eslint-disable-next-line
+      }, [])
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowLoader(true);
@@ -37,6 +45,7 @@ export default function LoginPage() {
       // }
       if (result.user && result.user.name) {
         // alert("Login successful!");
+        localStorage.setItem("user",JSON.stringify(result));
         setShowLoader(false);
         navigate("/"); 
       } else {

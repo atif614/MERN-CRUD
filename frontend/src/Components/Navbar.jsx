@@ -1,10 +1,10 @@
 // import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+// import { Link, useNavigate } from "react-router- dom";
 // import "./Navbar.css";
 
 
 // const Navbar = () => {
-//     const auth = localStorage.getItem("user");
+// const auth = localStorage.getItem("user");
 //     const navigate = useNavigate();
 //     const logout = ()=>{
 //         console.warn("logout function");
@@ -36,8 +36,16 @@ import { Link, useNavigate } from "react-router-dom";
 // export default Navbar;
 
 import React from "react";
+import { useNavigate,Link } from "react-router-dom";
 
 const Navbar = () => {
+    const auth = localStorage.getItem("user");
+    // console.log(JSON.parse(auth).user.name)
+    const navigate = useNavigate();
+    function logout (){
+        localStorage.clear();
+        navigate("/");
+    }
     return (
         <div>
             <nav className="bg-gray-800">
@@ -61,12 +69,19 @@ const Navbar = () => {
                             </div>
                             <div className="hidden sm:ml-6 sm:block">
                                 <div className="flex space-x-4">
-                                    <a href="#" aria-current="page" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-                                    <Link to="/" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home Page</Link>
-                                    <Link to="/add" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Add Product</Link>
-                                    <Link to="/update" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Update</Link>
-                                    <Link to="/login" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Login</Link>
-                                    <Link to="/signup" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Sign Up</Link>
+                                    {/* <a href="#" aria-current="page" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Dashboard</a> */}
+                                    {
+                                        auth ?
+                                            <div> <Link to="/" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home Page</Link>
+                                                <Link to="/add" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Add Product</Link>
+                                                <Link to="/update" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Update</Link>
+                                                <Link to="/login" onClick={logout} className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Logout ({JSON.parse(auth).user.name})</Link> </div>
+                                            :
+                                            <div>
+                                                <Link to="/login" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Login</Link>
+                                                <Link to="/signup" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Sign Up</Link>
+                                            </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -96,14 +111,14 @@ const Navbar = () => {
                         </div>
                     </div>
                 </div>
-                <el-disclosure id="mobile-menu" hidden className="block sm:hidden">
+                {/* <el-disclosure id="mobile-menu" hidden className="block sm:hidden">
                     <div className="space-y-1 px-2 pt-2 pb-3">
                         <a href="#" aria-current="page" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">Dashboard</a>
                         <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home Page</a>
                         <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
                         <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
                     </div>
-                </el-disclosure>
+                </el-disclosure> */}
             </nav>
 
         </div>

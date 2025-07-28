@@ -15,13 +15,13 @@ function App() {
         <Navbar />
         <Routes>
 
-          {/* <Route element={<PrivateComponent/>}> */}
+          <Route element={<PrivateComponent/>}>
             <Route path="/" element={<h1>Product Listing</h1>} />
             <Route path="/add" element={<Product/>} />
             <Route path="/update" element={<h1>Prwe oduct Listing</h1>} />
             <Route path="/logout" element={<h1>Psroduct Listing</h1>} />
             <Route path="/profile" element={<h1>Prweoduct Listing</h1>} />
-          {/* </Route> */}
+          </Route>
 
           <Route path="/signup" element={<SignUp />} />
           <Route path='/login' element={<Login/>} />
