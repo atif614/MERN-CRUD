@@ -1,18 +1,42 @@
-import {useState} from "react";
+import { useState } from "react";
 import "./Product.css";
-
+import { ToastContainer, toast } from 'react-toastify';
 
 const Product = () => {
-    const [name,setName] = useState("");
-    const [price,setPrice] = useState("");
-    const [category,setCategory] = useState("");
-    const [userId,setUserId] = useState("");
-    const [company,setCompany] = useState("");
-
-    const addProduct = (e)=>{
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [category, setCategory] = useState("");
+    // const [userId, setUserId] = useState("");
+    const [company, setCompany] = useState("");
+    const [showLoader, setShowLoader] = useState(false);
+    const [toaster,setToaster] = useState(false);
+    const notify = () => toast("Wow so easy!");
+    const addProduct = (e) => {
         e.preventDefault();
-        console.log({name,price,category,userId,company})
+        setShowLoader(true);
+        getData();
+        console.log({ name, price, category, userId, company })
     }
+    const getData = async () => {
+        setTimeout(async() => {
+            const userId = JSON.parse(localStorage.getItem('user').result._id);
+            userId = userId.user._id;
+            let result = await fetch("http://localhost:5000/add-product", {
+            method: 'POST',
+            body: JSON.stringify({ name, price, category, userId, company }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        result = result.json();
+        console.log(result);
+        if(true){
+            setShowLoader(false);
+            setToaster(true);
+        }
+        }, 4000);
+    }
+
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center py-10">
             <form onSubmit={addProduct} className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
@@ -25,7 +49,7 @@ const Product = () => {
                         id="name"
                         className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" "
-                        onChange=  {(e)=>setName(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                         required
                     />
                     <label
@@ -43,7 +67,7 @@ const Product = () => {
                         id="price"
                         className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" "
-                        onChange=  {(e)=>setPrice(e.target.value)}
+                        onChange={(e) => setPrice(e.target.value)}
                         required
                     />
                     <label
@@ -61,7 +85,7 @@ const Product = () => {
                         id="category"
                         className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" "
-                        onChange=  {(e)=>setCategory(e.target.value)}
+                        onChange={(e) => setCategory(e.target.value)}
                         required
                     />
                     <label
@@ -80,7 +104,7 @@ const Product = () => {
                             id="userId"
                             className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=" "
-                            onChange=  {(e)=>setUserId(e.target.value)}
+                            onChange={(e) => setUserId(e.target.value)}
                             required
                         />
                         <label
@@ -98,7 +122,7 @@ const Product = () => {
                             id="company"
                             className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=" "
-                            onChange=  {(e)=>setCompany(e.target.value)}
+                            onChange={(e) => setCompany(e.target.value)}
                             required
                         />
                         <label
@@ -109,13 +133,37 @@ const Product = () => {
                         </label>
                     </div>
                 </div>
+                {/* <button onClick={notify}>Notify!</button> */}
+                {/* <button
+                    type="submit"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
+                    onClick={notify}
+                >
+                    Submit 
+                     {showLoader && <div className="spinner-border ml-5" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>}
+                </button> */}
 
                 <button
                     type="submit"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
+                    className="btn btn-primary d-flex align-items-center justify-content-center gap-2 w-100"
+                    onClick={notify}
                 >
                     Submit
+                    {showLoader && <div
+                        className="spinner-border spinner-border-sm text-light"
+                        role="status"
+                        style={{ width: '1rem', height: '1rem' }}
+                    >
+                        <span className="visually-hidden">Loading...</span>
+                    </div>}
                 </button>
+
+
+                {
+                    setToaster ?? <ToastContainer />
+                }
             </form>
         </div>
     );
