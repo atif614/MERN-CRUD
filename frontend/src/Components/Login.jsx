@@ -1,25 +1,50 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showLoader,setShowLoader] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowLoader(true);
+    console.log(showLoader)
+    console.log({ email, password });
 
-    if (!email || !password) {
+ setTimeout(async() => {
+   if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-
-    setError("");
-
-    if (email === "admin@example.com" && password === "admin123") {
-      alert("Login successful!");
-    } else {
-      setError("Invalid email or password.");
+    else {
+      let result = await fetch("http://localhost:5000/login", {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      result = await result.json();
+      console.log(result);
+      // console.log(result.user.name)
+      // if (result.user.name) {
+      //     localStorage.setItem("user",JSON.stringify(result));
+      //     navigate("/");
+      // }
+      if (result.user && result.user.name) {
+        // alert("Login successful!");
+        setShowLoader(false);
+        navigate("/"); 
+      } else {
+         setShowLoader(false);
+        setError("Invalid email or password.");
+      }
     }
+ }, 5000);
   };
 
   return (
@@ -76,10 +101,14 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            className="w-full flex justify-center items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
           >
-            Sign in
+            {showLoader &&  <div className="spinner-border" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>}
+            Login
           </button>
+
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
