@@ -6,6 +6,7 @@ const ProductSchema = new mongoose.Schema({
     category: String,
     userId: String,
     company: String,
+    colour:String
 },
  {
     timestamps:true,

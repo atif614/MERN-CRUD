@@ -1,43 +1,56 @@
 import { useEffect, useState } from "react";
-import "./Product.css";
+import "./AddProduct.css";
 import { ToastContainer, toast } from 'react-toastify';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const UpdateProduct = () => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
-    const [userId, setUserId] = useState("");
+    const [colour, setColour] = useState("");
     const [company, setCompany] = useState("");
     const [showLoader, setShowLoader] = useState(false);
-    const [toaster,setToaster] = useState(false);
+    const [toaster, setToaster] = useState(false);
     const notify = () => toast("Wow so easy!");
     const params = useParams();
 
-    useEffect(()=>{
-      getProductData()
-    },[]);
+    useEffect(() => {
+        getProductData()
+    }, []);
 
+    const navigate = useNavigate();
 
     const getProductData = async () => {
         console.log(params.id);
-         let result = await fetch("http://localhost:5000/product/"+params.id);
-         result = await result.json();
-         console.log(result.result.name);
-         setName(result.result.name);
-         setPrice(result.result.price);
-         setCategory(result.result.category);
-         setCompany(result.result.company);
-         setUserId(result.result.userId);
+        let result = await fetch("http://localhost:5000/product/" + params.id);
+        result = await result.json();
+        setName(result.result.name);
+        setPrice(result.result.price);
+        setCategory(result.result.category);
+        setCompany(result.result.company);
+        setColour(result.result.colour);
     }
-    const UpdateTheProduct = (e) => {
+
+    const UpdateTheProduct = async (e) => {
         e.preventDefault();
         setShowLoader(true);
-        getProductData();
-        // getData();
-        console.log({ name, price, category, userId, company })
+        // console.log({ name, price, category, company, userId });
+        setTimeout(async () => {
+            let result = await fetch(`http://localhost:5000/update/${params.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({ name, price, category, company, colour}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            result = await result.json();
+            if (result) {
+                navigate("/");
+            }
+            console.log(result);
+        }, 2000);
     }
-    
+
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center py-10">
@@ -105,19 +118,19 @@ const UpdateProduct = () => {
                     <div className="relative z-0 w-full mb-5 group">
                         <input
                             type="text"
-                            name="userId"
-                            id="userId"
-                            value={userId}
+                            name="colour"
+                            id="colour"
+                            value={colour}
                             className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=" "
-                            onChange={(e) => setUserId(e.target.value)}
+                            onChange={(e) => setColour(e.target.value)}
                             required
                         />
                         <label
-                            htmlFor="userId"
+                            htmlFor="colour"
                             className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                            User Id
+                            Colour
                         </label>
                     </div>
 
@@ -157,7 +170,7 @@ const UpdateProduct = () => {
                     className="btn btn-primary d-flex align-items-center justify-content-center gap-2 w-100"
                     onClick={notify}
                 >
-                    Submit
+                    Update
                     {showLoader && <div
                         className="spinner-border spinner-border-sm text-light"
                         role="status"

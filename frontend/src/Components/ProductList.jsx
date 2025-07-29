@@ -1,13 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { ToastContainer,toast } from "react-toastify";
 
 const ProductList = () => {
-
     const [data, setData] = useState([]);
+    const location = useLocation();
+    const notify = (message, type = "default") => {
+        switch (type) {
+            case "success":
+                toast.success(message);
+                break;
+            case "error":
+                toast.error(message);
+                break;
+            case "info":
+                toast.info(message);
+                break;
+            default:
+                toast(message);
+        }
+    };
 
     useEffect(() => {
         getData();
-    }, []);
+        if (location.state && location.state?.message) {
+            toast.success(location.state.message);
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state]);
 
     async function getData() {
         let result = await fetch("http://localhost:5000/getProducts");
@@ -28,6 +48,7 @@ const ProductList = () => {
     }
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <ToastContainer />
             <div className="pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">Search</label>
                 <div className="relative mt-3 ml-5">
@@ -58,6 +79,9 @@ const ProductList = () => {
                             Category
                         </th>
                         <th scope="col" className="px-6 py-3">
+                            Colour
+                        </th>
+                        <th scope="col" className="px-6 py-3">
                             Price
                         </th>
                         <th scope="col" className="px-6 py-3">
@@ -81,6 +105,7 @@ const ProductList = () => {
                                     </th>
                                     <td className="px-6 py-4">{product.company}</td>
                                     <td className="px-6 py-4">{product.category}</td>
+                                    <td className="px-6 py-4">{product.colour}</td>
                                     <td className="px-6 py-4">{product.price}</td>
                                     <td className="px-6 py-4">
                                         {/* <a
@@ -88,16 +113,16 @@ const ProductList = () => {
                                             className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                         >
                                             Delete */}
-                                {/* <a> */}
-                                <button type="button" className="btn btn-success">Delete</button>
-                                <Link to={"/update/"+product._id}> <button  type="button" className="ml-4 btn btn-secondary">Update</button></Link>
-                                {/* </a> */}
-                              </td>
-            </tr>
-            );
+                                        {/* <a> */}
+                                        <button type="button" className="btn btn-success">Delete</button>
+                                        <Link to={"/update/" + product._id}> <button type="button" className="ml-4 btn btn-secondary">Update</button></Link>
+                                        {/* </a> */}
+                                    </td>
+                                </tr>
+                            );
                         })
                     }
-        </tbody>
+                </tbody>
             </table >
         </div >
     )

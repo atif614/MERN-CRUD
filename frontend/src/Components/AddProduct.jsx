@@ -1,40 +1,62 @@
-import { useState } from "react";
-import "./Product.css";
+import { useEffect, useState } from "react";
+import "./AddProduct.css";
 import { ToastContainer, toast } from 'react-toastify';
+import { useLocation } from "react-router-dom";
 
-const Product = () => {
+const AddProduct = () => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
-    const [userId, setUserId] = useState("");
+    const [colour, setColour] = useState("");
     const [company, setCompany] = useState("");
     const [showLoader, setShowLoader] = useState(false);
-    const [toaster,setToaster] = useState(false);
-    const notify = () => toast("Wow so easy!");
+    const [toaster, setToaster] = useState(false);
+    const location = useLocation();
+    const notify = (message, type = "default") => {
+        switch (type) {
+            case "success":
+                toast.success(message);
+                break;
+            case "error":
+                toast.error(message);
+                break;
+            case "info":
+                toast.info(message);
+                break;
+            default:
+                toast(message);
+        }
+    };
+    console.log(location)
+    useEffect(()=>{
+       console.log(location)
+    },[])
+    // const notify = () => toast("Wow so easy!");
     const addProduct = (e) => {
         e.preventDefault();
         setShowLoader(true);
         getData();
-        console.log({ name, price, category, userId, company })
+        console.log({ name, price, category, company })
     }
     const getData = async () => {
-        setTimeout(async() => {
-            // const userId = JSON.parse(localStorage.getItem('user').result._id);
-            // userId = userId.user._id;
+        setTimeout(async () => {
+            let userId = JSON.parse(localStorage.getItem('user'));
+            userId = userId.user._id;
+            console.log(userId)
             let result = await fetch("http://localhost:5000/add-product", {
-            method: 'POST',
-            body: JSON.stringify({ name, price, category, userId, company }),
-            headers: {
-                'Content-Type': 'application/json'
+                method: 'POST',
+                body: JSON.stringify({ name, price, category, colour, company }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            result = await result.json();
+            console.log(result);
+            if (result) {
+                setShowLoader(false);
+                setToaster(true);
             }
-        })
-        result = result.json();
-        console.log(result);
-        if(true){
-            setShowLoader(false);
-            setToaster(true);
-        }
-        }, 4000);
+        }, 3000);
     }
 
     return (
@@ -100,18 +122,18 @@ const Product = () => {
                     <div className="relative z-0 w-full mb-5 group">
                         <input
                             type="text"
-                            name="userId"
-                            id="userId"
+                            name="colour"
+                            id="colour"
                             className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=" "
-                            onChange={(e) => setUserId(e.target.value)}
+                            onChange={(e) => setColour(e.target.value)}
                             required
                         />
                         <label
-                            htmlFor="userId"
+                            htmlFor="colour"
                             className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                            User Id
+                            Colour
                         </label>
                     </div>
 
@@ -167,4 +189,4 @@ const Product = () => {
     );
 };
 
-export default Product;
+export default AddProduct;
