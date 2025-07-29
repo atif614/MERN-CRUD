@@ -93,6 +93,16 @@ app.get("/product/:id",async (req,res)=>{
     }
     
 })
+app.put("/update/:id", async (req,res)=>{
+    console.log(req.params.id)
+   let result = await Product.updateOne(
+    {_id:req.params.id},
+    {
+        $set: req.body
+    }
+   );
+   res.json({result});
+})
 
 app.listen(5000);
 
