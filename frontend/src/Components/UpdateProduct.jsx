@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Product.css";
 import { ToastContainer, toast } from 'react-toastify';
+import { useParams } from "react-router-dom";
 
-const Product = () => {
+const UpdateProduct = () => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
@@ -11,42 +12,44 @@ const Product = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [toaster,setToaster] = useState(false);
     const notify = () => toast("Wow so easy!");
-    const addProduct = (e) => {
+    const params = useParams();
+
+    useEffect(()=>{
+      getProductData()
+    },[]);
+
+
+    const getProductData = async () => {
+        console.log(params.id);
+         let result = await fetch("http://localhost:5000/product/"+params.id);
+         result = await result.json();
+         console.log(result.result.name);
+         setName(result.result.name);
+         setPrice(result.result.price);
+         setCategory(result.result.category);
+         setCompany(result.result.company);
+         setUserId(result.result.userId);
+    }
+    const UpdateTheProduct = (e) => {
         e.preventDefault();
         setShowLoader(true);
-        getData();
+        getProductData();
+        // getData();
         console.log({ name, price, category, userId, company })
     }
-    const getData = async () => {
-        setTimeout(async() => {
-            // const userId = JSON.parse(localStorage.getItem('user').result._id);
-            // userId = userId.user._id;
-            let result = await fetch("http://localhost:5000/add-product", {
-            method: 'POST',
-            body: JSON.stringify({ name, price, category, userId, company }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        result = result.json();
-        console.log(result);
-        if(true){
-            setShowLoader(false);
-            setToaster(true);
-        }
-        }, 4000);
-    }
+    
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center py-10">
-            <form onSubmit={addProduct} className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">Add Product</h2>
+            <form onSubmit={UpdateTheProduct} className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+                <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">Update Product</h2>
 
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         type="text"
                         name="name"
                         id="name"
+                        value={name}
                         className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" "
                         onChange={(e) => setName(e.target.value)}
@@ -65,6 +68,7 @@ const Product = () => {
                         type="text"
                         name="price"
                         id="price"
+                        value={price}
                         className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" "
                         onChange={(e) => setPrice(e.target.value)}
@@ -83,6 +87,7 @@ const Product = () => {
                         type="text"
                         name="category"
                         id="category"
+                        value={category}
                         className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" "
                         onChange={(e) => setCategory(e.target.value)}
@@ -102,6 +107,7 @@ const Product = () => {
                             type="text"
                             name="userId"
                             id="userId"
+                            value={userId}
                             className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=" "
                             onChange={(e) => setUserId(e.target.value)}
@@ -120,6 +126,7 @@ const Product = () => {
                             type="text"
                             name="company"
                             id="company"
+                            value={company}
                             className="input block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=" "
                             onChange={(e) => setCompany(e.target.value)}
@@ -167,4 +174,4 @@ const Product = () => {
     );
 };
 
-export default Product;
+export default UpdateProduct;

@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const ProductList = () => {
 
-    const [data,setData] = useState([]);
+    const [data, setData] = useState([]);
 
-    useEffect(()=>{
-      getData();
-    },[]);
-    
+    useEffect(() => {
+        getData();
+    }, []);
+
     async function getData() {
         let result = await fetch("http://localhost:5000/getProducts");
         result = await result.json();
         console.log(result);
         setData(result);
         console.log(data)
+    }
+    async function deleteProduct(id) {
+        console.log(id);
+        let result = await fetch(`http://localhost:5000/product/${id}`, {
+            method: 'DELETE'
+        });
+        console.log(result.status);
+        if (result.status == 200) {
+            getData();
+        }
     }
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -56,175 +67,39 @@ const ProductList = () => {
                 </thead>
                 <tbody>
                     {
-  data.map((product, index) => {
-    return (
-      <tr
-        key={index}
-        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <th
-          scope="row"
-          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-        >
-          {product.name}
-        </th>
-        <td className="px-6 py-4">{product.company}</td>
-        <td className="px-6 py-4">{product.category}</td>
-        <td className="px-6 py-4">{product.price}</td>
-        <td className="px-6 py-4">
-          <a
-            href="#"
-            className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-          >
-            Edit
-          </a>
-        </td>
-      </tr>
-    );
-  })
-}
-
-                    {/* {
-                        data.map((product,index)=> {
-                        return  (
-                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {product.name}   
-                            </th>
-                            <td className="px-6 py-4">
-                                Silver
-                            </td>
-                            <td className="px-6 py-4">
-                                Laptop
-                            </td>
-                            <td className="px-6 py-4">
-                                $2999
-                            </td>
-                            <td className="px-6 py-4">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            </td>
-                        </tr>
-                        )
+                        data.map((product, index) => {
+                            return (
+                                <tr
+                                    key={index}
+                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                >
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    >
+                                        {product.name}
+                                    </th>
+                                    <td className="px-6 py-4">{product.company}</td>
+                                    <td className="px-6 py-4">{product.category}</td>
+                                    <td className="px-6 py-4">{product.price}</td>
+                                    <td className="px-6 py-4">
+                                        {/* <a
+                                            onClick={()=>deleteProduct(product._id)}
+                                            className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        >
+                                            Delete */}
+                                {/* <a> */}
+                                <button type="button" className="btn btn-success">Delete</button>
+                                <Link to={"/update/"+product._id}> <button  type="button" className="ml-4 btn btn-secondary">Update</button></Link>
+                                {/* </a> */}
+                              </td>
+            </tr>
+            );
                         })
-                    } */}
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-2" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label htmlFor="checkbox-table-search-2" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Microsoft Surface Pro
-                        </th>
-                        <td className="px-6 py-4">
-                            White
-                        </td>
-                        <td className="px-6 py-4">
-                            Laptop PC
-                        </td>
-                        <td className="px-6 py-4">
-                            $1999
-                        </td>
-                        <td className="px-6 py-4">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label htmlFor="checkbox-table-search-3" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Magic Mouse 2
-                        </th>
-                        <td className="px-6 py-4">
-                            Black
-                        </td>
-                        <td className="px-6 py-4">
-                            Accessories
-                        </td>
-                        <td className="px-6 py-4">
-                            $99
-                        </td>
-                        <td className="px-6 py-4">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-3" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label htmlFor="checkbox-table-3" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Apple Watch
-                        </th>
-                        <td className="px-6 py-4">
-                            Silver
-                        </td>
-                        <td className="px-6 py-4">
-                            Accessories
-                        </td>
-                        <td className="px-6 py-4">
-                            $179
-                        </td>
-                        <td className="px-6 py-4">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-3" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label htmlFor="checkbox-table-3" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            iPad
-                        </th>
-                        <td className="px-6 py-4">
-                            Gold
-                        </td>
-                        <td className="px-6 py-4">
-                            Tablet
-                        </td>
-                        <td className="px-6 py-4">
-                            $699
-                        </td>
-                        <td className="px-6 py-4">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-3" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label htmlFor="checkbox-table-3" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Apple iMac 27"
-                        </th>
-                        <td className="px-6 py-4">
-                            Silver
-                        </td>
-                        <td className="px-6 py-4">
-                            PC Desktop
-                        </td>
-                        <td className="px-6 py-4">
-                            $3999
-                        </td>
-                        <td className="px-6 py-4">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                    }
+        </tbody>
+            </table >
+        </div >
     )
 }
 
