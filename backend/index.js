@@ -44,6 +44,7 @@ app.post("/login",async(req,res)=>{
 })
 
 app.post("/add-product",async(req,res)=>{
+    console.log("REQUEST BODY",req.body)
     let product = new Product(req.body);
     let result = await product.save();
   const formattedCreatedAt = new Date(product.createdAt).toLocaleString('en-US', {
@@ -66,6 +67,15 @@ app.post("/add-product",async(req,res)=>{
     return res.json({result,formattedCreatedAt,formattedUpdatedAt});
 })
 
+app.get("/getProducts",async(req,res)=>{
+    const product = await Product.find();
+    console.log(product)
+    if(product.length>0){
+        res.send(product)
+    }else{
+        res.json({message:'No Products Found'})
+    }
+})
 app.listen(5000);
 
 
