@@ -16,11 +16,19 @@ app.post("/register", async (req, res) => {
     if (!req.body.name || !req.body.password || !req.body.email) {
         return res.status(400).json({ error: 'Missing required fields: name or email' });
     }
-    let user = new User(req.body);
-    console.log(req.body);
+    let user = await User.findOne({ email: req.body.email });
+    if (user) {
+        return res
+            .status(400)
+            .json({
+                error: 'Sorry a user with this email already exists',
+            });
+    }
+    user = new User(req.body);
+    console.log(user)
     let result = await user.save();
-    delete result.password;
     console.log(result)
+    delete result.password;
     res.json({ result });
 })
 
@@ -34,17 +42,15 @@ app.post("/login", async (req, res) => {
         return res.status(400).json({ error: 'Missing required fields: email or password' });
     }
     let user = await User.findOne(req.body);
-    console.log(user);
     if (user) {
         res.json({ user, });
     }
     else {
-        return res.json({ error: 'Invalid Credentials' });
+        return res.json({ error: 'Invalid Credential' });
     }
 })
 
 app.post("/add-product", async (req, res) => {
-    console.log("REQUEST BODY", req.body)
     let product = new Product(req.body);
     let result = await product.save();
     const formattedCreatedAt = new Date(product.createdAt).toLocaleString('en-US', {
@@ -69,7 +75,6 @@ app.post("/add-product", async (req, res) => {
 
 app.get("/getProducts", async (req, res) => {
     const product = await Product.find();
-    console.log(product)
     if (product.length > 0) {
         res.send(product)
     } else {
@@ -84,7 +89,6 @@ app.delete("/product/:id", async (req, res) => {
 
 app.get("/product/:id", async (req, res) => {
     let result = await Product.findOne({ _id: req.params.id });
-    console.log(result)
     if (result) {
         res.json({ result })
     }
@@ -94,7 +98,6 @@ app.get("/product/:id", async (req, res) => {
 
 })
 app.put("/update/:id", async (req, res) => {
-    console.log(req.params.id)
     let result = await Product.updateOne(
         { _id: req.params.id },
         {
@@ -104,17 +107,17 @@ app.put("/update/:id", async (req, res) => {
     res.json({ result });
 })
 
-app.get("/search/:key",async(req,res)=>{
+app.get("/search/:key", async (req, res) => {
     let result = await Product.find({
-        "$or":[
-            {name:{$regex: req.params.key}},
-            {price:{$regex: req.params.key}},
-            {category:{$regex: req.params.key}},
-            {company:{$regex: req.params.key}},
-            {colour:{$regex: req.params.key}}
+        "$or": [
+            { name: { $regex: req.params.key } },
+            { price: { $regex: req.params.key } },
+            { category: { $regex: req.params.key } },
+            { company: { $regex: req.params.key } },
+            { colour: { $regex: req.params.key } }
         ]
     });
-    res.send({result}); 
+    res.send({ result });
 })
 
 app.listen(5000);

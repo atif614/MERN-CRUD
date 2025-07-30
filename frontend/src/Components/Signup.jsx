@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function LoginPage() {
     const [name, setName] = useState();
@@ -9,9 +10,23 @@ export default function LoginPage() {
     const [showLoader, setShowLoader] = useState(false);
     const navigate = useNavigate();
     const auth = localStorage.getItem("user");
-
+    const notify = (message, type = "default") => {
+        switch (type) {
+            case "success":
+                toast.success(message);
+                break;
+            case "error":
+                toast.error(message);
+                break;
+            case "info":
+                toast.info(message);
+                break;
+            default:
+                toast(message);
+        }
+    };
     useEffect(() => {
-        console.log("Inside")
+        setShowLoader(false)
         if (auth) {
             navigate("/");
         }
@@ -21,8 +36,6 @@ export default function LoginPage() {
     const handleRegister = (e) => {
         e.preventDefault();
         setShowLoader(true);
-        console.log(showLoader)
-        console.log({ email, password });
 
         setTimeout(async () => {
             if (!email || !password) {
@@ -37,15 +50,20 @@ export default function LoginPage() {
                         'Content-Type': 'application/json'
                     }
                 })
-                result = await result.json();
                 console.log(result);
-                if (result.result.name && result.result.name) {
-                    localStorage.setItem("user", JSON.stringify(result));
+                let response = await result.json();
+                console.log(response.error);
+                console.log(result.status);
+                if (response.result && response.result.name) {
+                    console.log("Inside if")
+                    localStorage.setItem("user", JSON.stringify(response));
                     setShowLoader(false);
-                    navigate("/");
-                } else {
+                    // navigate("/");
+                    navigate("/", { state: { message: "Login Successful" } });
+                } else if (result.status == 400) {
+                    console.log("Inside Else")
                     setShowLoader(false);
-                    setError("Invalid email or password.");
+                    notify(response.error, "error");
                 }
             }
         }, 5000);
@@ -116,23 +134,24 @@ export default function LoginPage() {
                     </div>
 
                     {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
+                    <ToastContainer position="top-right" autoClose={5000} />
 
                     <button
                         type="submit"
-                        className="w-full flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                        className="w-full mt-4 flex justify-center items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
                     >
                         {showLoader && <div className="spinner-border" role="status">
                             <span className="sr-only">Loading...</span>
                         </div>}
-                        Sign in
+                         Sign In
                     </button>
                 </form>
 
                 <p className="mt-6 text-center text-sm text-gray-500">
-                    Not a member?{" "}
-                    <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                        Start a 14-day free trial
-                    </a>
+                    Already have an account?{' '}
+                    <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                        Login
+                    </Link>
                 </p>
             </div>
         </div>

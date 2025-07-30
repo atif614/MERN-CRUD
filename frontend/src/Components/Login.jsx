@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -61,14 +61,13 @@ export default function LoginPage() {
           // navigate("/");
           navigate("/", { state: { message: "Login Successful" } });
         } else {
-          console.log("Inside Else")
           setShowLoader(false);
           // setError("Invalid email or password.");
           // notify(result.error);
           notify(result.error, "error");
         }
       }
-    }, 5000);
+    }, 5000); 
   };
 
   return (
@@ -137,10 +136,10 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          Not a member?{" "}
-          <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-            Start a 14-day free trial
-          </a>
+           Don’t have an account?{' '}
+          <Link to="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            Sign up
+          </Link>
         </p>
       </div>
     </div>

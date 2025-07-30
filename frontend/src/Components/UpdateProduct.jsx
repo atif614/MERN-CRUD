@@ -21,7 +21,6 @@ const UpdateProduct = () => {
     const navigate = useNavigate();
 
     const getProductData = async () => {
-        console.log(params.id);
         let result = await fetch("http://localhost:5000/product/" + params.id);
         result = await result.json();
         setName(result.result.name);
@@ -34,7 +33,6 @@ const UpdateProduct = () => {
     const UpdateTheProduct = async (e) => {
         e.preventDefault();
         setShowLoader(true);
-        // console.log({ name, price, category, company, userId });
         setTimeout(async () => {
             let result = await fetch(`http://localhost:5000/update/${params.id}`, {
                 method: 'PUT',
@@ -47,7 +45,6 @@ const UpdateProduct = () => {
             if (result) {
                 navigate("/");
             }
-            console.log(result);
         }, 2000);
     }
 

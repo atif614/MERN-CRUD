@@ -27,22 +27,16 @@ const AddProduct = () => {
                 toast(message);
         }
     };
-    console.log(location)
-    useEffect(()=>{
-       console.log(location)
-    },[])
     // const notify = () => toast("Wow so easy!");
     const addProduct = (e) => {
         e.preventDefault();
         setShowLoader(true);
         getData();
-        console.log({ name, price, category, company })
     }
     const getData = async () => {
         setTimeout(async () => {
             let userId = JSON.parse(localStorage.getItem('user'));
             userId = userId.user._id;
-            console.log(userId)
             let result = await fetch("http://localhost:5000/add-product", {
                 method: 'POST',
                 body: JSON.stringify({ name, price, category, colour, company }),
@@ -51,7 +45,6 @@ const AddProduct = () => {
                 }
             })
             result = await result.json();
-            console.log(result);
             if (result) {
                 setShowLoader(false);
                 setToaster(true);

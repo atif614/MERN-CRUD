@@ -32,19 +32,20 @@ const ProductList = () => {
     async function getData() {
         let result = await fetch("http://localhost:5000/getProducts");
         result = await result.json();
-        console.log(result);
         setData(result);
-        console.log(data)
+
     }
     async function deleteProduct(id) {
-        console.log(id);
         let result = await fetch(`http://localhost:5000/product/${id}`, {
             method: 'DELETE'
         });
-        console.log(result.status);
+
         if (result.status == 200) {
             getData();
         }
+    }
+    async function SearchHandler(event){
+     console.log(event.target)
     }
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -57,7 +58,7 @@ const ProductList = () => {
                             <path stroke="currentColor" strokelinecap-="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                         </svg>
                     </div>
-                    <input type="text" id="table-search" className="block pt-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for items" />
+                    <input type="text" id="table-search" className="block pt-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for items" onChange={SearchHandler} />
                 </div>
             </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -114,9 +115,9 @@ const ProductList = () => {
                                         >
                                             Delete */}
                                         {/* <a> */}
-                                        <button type="button" className="btn btn-success">Delete</button>
+                                        <button type="button" onClick={()=>deleteProduct(product._id)} className="btn btn-success">Delete</button>
                                         <Link to={"/update/" + product._id}> <button type="button" className="ml-4 btn btn-secondary">Update</button></Link>
-                                        {/* </a> */}
+                                        {/* </a> */}    
                                     </td>
                                 </tr>
                             );
