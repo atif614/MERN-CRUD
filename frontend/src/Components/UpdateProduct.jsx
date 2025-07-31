@@ -21,7 +21,11 @@ const UpdateProduct = () => {
     const navigate = useNavigate();
 
     const getProductData = async () => {
-        let result = await fetch("http://localhost:5000/product/" + params.id);
+        let result = await fetch("http://localhost:5000/product/" + params.id,{
+            headers: {
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+            }
+        });
         result = await result.json();
         setName(result.result.name);
         setPrice(result.result.price);
@@ -38,7 +42,8 @@ const UpdateProduct = () => {
                 method: 'PUT',
                 body: JSON.stringify({ name, price, category, company, colour}),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
                 }
             })
             result = await result.json();

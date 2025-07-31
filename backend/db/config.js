@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
-mongoose.connect("mongodb+srv://razaatif20786:h7fikzluw3e8QhJB@cluster0.cqwhbvs.mongodb.net/e--commercee");
+mongoose.connect(process.env.MONGO_URL);
 

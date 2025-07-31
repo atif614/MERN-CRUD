@@ -50,7 +50,7 @@ const AddProduct = () => {
                 body: JSON.stringify({ name, price, category, colour, company,userId }),
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': JSON.parse(localStorage.getItem("token"))
+                    Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
                 }
             })
             result = await result.json();

@@ -42,7 +42,10 @@ const ProductList = () => {
     }
     async function deleteProduct(id) {
         let result = await fetch(`http://localhost:5000/product/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+            }
         });
 
         if (result.status == 200) {
@@ -53,7 +56,11 @@ const ProductList = () => {
         console.log(event.target.value);
         let key = event.target.value;
         if (key) {
-            let result = await fetch(`http://localhost:5000/search/${key}`);
+            let result = await fetch(`http://localhost:5000/search/${key}`,{
+                headers: {
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+            }
+            });
             result = await result.json();
             console.log(result);
             if (result) {

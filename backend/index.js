@@ -8,6 +8,7 @@ const JWT = require('jsonwebtoken');
 const SECRETKEY = 'e-commerce Key';
 app.use(express.json());
 app.use(cors());
+require('dotenv').config();
 const fetchUser = require("./middleware/fetchUser");
 
 app.post("/register", async (req, res) => {
@@ -50,9 +51,12 @@ app.post("/login", async (req, res) => {
     }
 })
 
-app.post("/add-product", async (req, res) => {
+app.post("/add-product", fetchUser, async (req, res) => {
     let product = new Product(req.body);
     let result = await product.save();
+    //  if (result.userId.toString() !== req.user.id) {
+    //         return res.status(401).send('Not Allowed');
+    //     }
     const formattedCreatedAt = new Date(product.createdAt).toLocaleString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -83,12 +87,12 @@ app.get("/getProducts", fetchUser, async (req, res) => {
     }
 })
 
-app.delete("/product/:id", async (req, res) => {
+app.delete("/product/:id",fetchUser, async (req, res) => {
     const result = await Product.deleteOne({ _id: req.params.id })
     res.send(result);
 })
 
-app.get("/product/:id", async (req, res) => {
+app.get("/product/:id",fetchUser, async (req, res) => {
     let result = await Product.findOne({ _id: req.params.id });
     if (result) {
         res.json({ result })
@@ -98,7 +102,7 @@ app.get("/product/:id", async (req, res) => {
     }
 
 })
-app.put("/update/:id", async (req, res) => {
+app.put("/update/:id",fetchUser, async (req, res) => {
     let result = await Product.updateOne(
         { _id: req.params.id },
         {
@@ -108,8 +112,10 @@ app.put("/update/:id", async (req, res) => {
     res.json({ result });
 })
 
-app.get("/search/:key", async (req, res) => {
+app.get("/search/:key",fetchUser, async (req, res) => {
+    const userId = req.user.user._id;
     let result = await Product.find({
+        userId: userId,
         "$or": [
             { name: { $regex: req.params.key, $options: 'i' } },
             { price: { $regex: req.params.key, $options: 'i' } },
@@ -121,22 +127,11 @@ app.get("/search/:key", async (req, res) => {
     res.send(result);
 })
 
-// function verifyToken(req, res, next) {
-//     let token = req.headers['authorization'];
-//     console.log(token)
-//     if (token) {
-//         token = token.split(' ')[1];
-//         console.log(token);
-//         const verifiedToken = JWT.verify(token, SECRETKEY);
-//         console.log(verifiedToken);
-//         next();
-//     }
-//     else {
-//         res.send('Something error with token')
-//     }
-// }
+const PORT = process.env.PORT;
 
-app.listen(5000);
+app.listen(PORT,()=>{
+    console.log("Connected to the Server",PORT)
+});
 
 
 
