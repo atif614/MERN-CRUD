@@ -53,10 +53,11 @@ export default function LoginPage() {
           }
         })
         result = await result.json();
-
-        if (result.user && result.user.name) {
+        console.log(result)
+        if (result.result && result.token) {
           // alert("Login successful!");
           localStorage.setItem("user", JSON.stringify(result));
+          localStorage.setItem("token",JSON.stringify(result.token))
           setShowLoader(false);
           // navigate("/");
           navigate("/", { state: { message: "Login Successful" } });

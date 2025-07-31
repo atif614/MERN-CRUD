@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 const ProductList = () => {
     const [data, setData] = useState([]);
@@ -30,8 +30,13 @@ const ProductList = () => {
     }, [location.state]);
 
     async function getData() {
-        let result = await fetch("http://localhost:5000/getProducts");
+        let result = await fetch("http://localhost:5000/getProducts", {
+            headers: {
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+            }
+        });
         result = await result.json();
+        console.log(result)
         setData(result);
 
     }
@@ -44,9 +49,23 @@ const ProductList = () => {
             getData();
         }
     }
-    async function SearchHandler(event){
-     console.log(event.target)
+    async function SearchHandler(event) {
+        console.log(event.target.value);
+        let key = event.target.value;
+        if (key) {
+            let result = await fetch(`http://localhost:5000/search/${key}`);
+            result = await result.json();
+            console.log(result);
+            if (result) {
+                setData(result);
+            }
+        }
+        else {
+            getData();
+        }
+
     }
+    console.log(data)
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <ToastContainer />
@@ -92,7 +111,7 @@ const ProductList = () => {
                 </thead>
                 <tbody>
                     {
-                        data.map((product, index) => {
+                        data.length > 0 ? data.map((product, index) => {
                             return (
                                 <tr
                                     key={index}
@@ -115,17 +134,17 @@ const ProductList = () => {
                                         >
                                             Delete */}
                                         {/* <a> */}
-                                        <button type="button" onClick={()=>deleteProduct(product._id)} className="btn btn-success">Delete</button>
+                                        <button type="button" onClick={() => deleteProduct(product._id)} className="btn btn-success">Delete</button>
                                         <Link to={"/update/" + product._id}> <button type="button" className="ml-4 btn btn-secondary">Update</button></Link>
-                                        {/* </a> */}    
+                                        {/* </a> */}
                                     </td>
                                 </tr>
                             );
-                        })
+                        })  :  <>No Products to Display</>
                     }
                 </tbody>
-            </table >
-        </div >
+            </table>
+        </div>
     )
 }
 

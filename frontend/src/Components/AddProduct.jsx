@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./AddProduct.css";
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
     const [name, setName] = useState("");
@@ -12,6 +13,7 @@ const AddProduct = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [toaster, setToaster] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
     const notify = (message, type = "default") => {
         switch (type) {
             case "success":
@@ -28,26 +30,39 @@ const AddProduct = () => {
         }
     };
     // const notify = () => toast("Wow so easy!");
+     useEffect(()=>{
+        setShowLoader(false);   
+     },[])
     const addProduct = (e) => {
         e.preventDefault();
         setShowLoader(true);
         getData();
     }
+
     const getData = async () => {
         setTimeout(async () => {
             let userId = JSON.parse(localStorage.getItem('user'));
-            userId = userId.user._id;
+            console.log(userId.result._id);
+            // return;
+            userId = userId.result._id;
             let result = await fetch("http://localhost:5000/add-product", {
                 method: 'POST',
-                body: JSON.stringify({ name, price, category, colour, company }),
+                body: JSON.stringify({ name, price, category, colour, company,userId }),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': JSON.parse(localStorage.getItem("token"))
                 }
             })
             result = await result.json();
             if (result) {
                 setShowLoader(false);
                 setToaster(true);
+                setName("");
+                setPrice("");
+                setCategory("");
+                setColour("");
+                setCompany("");
+                navigate("/");  
             }
         }, 3000);
     }

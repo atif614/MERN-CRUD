@@ -4,8 +4,11 @@ const app = express();
 require("./db/config");
 const User = require("./users/users");
 const Product = require("./products/product");
+const JWT = require('jsonwebtoken');
+const SECRETKEY = 'e-commerce Key';
 app.use(express.json());
 app.use(cors());
+const fetchUser = require("./middleware/fetchUser");
 
 app.post("/register", async (req, res) => {
     const data = req.body;
@@ -18,18 +21,14 @@ app.post("/register", async (req, res) => {
     }
     let user = await User.findOne({ email: req.body.email });
     if (user) {
-        return res
-            .status(400)
-            .json({
-                error: 'Sorry a user with this email already exists',
-            });
+        return res.status(400).json({ error: 'Sorry a user with this email already exists' });
     }
     user = new User(req.body);
     console.log(user)
     let result = await user.save();
-    console.log(result)
+    const token = JWT.sign({ user }, SECRETKEY, { expiresIn: '1h' });
     delete result.password;
-    res.json({ result });
+    res.json({ result, token });
 })
 
 app.post("/login", async (req, res) => {
@@ -41,9 +40,10 @@ app.post("/login", async (req, res) => {
     if (!req.body.password || !req.body.email) {
         return res.status(400).json({ error: 'Missing required fields: email or password' });
     }
-    let user = await User.findOne(req.body);
-    if (user) {
-        res.json({ user, });
+    let result = await User.findOne(req.body).select("-password");
+    if (result) {
+        const token = JWT.sign({ result }, SECRETKEY, { expiresIn: '1h' });
+        res.json({ result, token });
     }
     else {
         return res.json({ error: 'Invalid Credential' });
@@ -73,10 +73,11 @@ app.post("/add-product", async (req, res) => {
     return res.json({ result, formattedCreatedAt, formattedUpdatedAt });
 })
 
-app.get("/getProducts", async (req, res) => {
-    const product = await Product.find();
+app.get("/getProducts", fetchUser, async (req, res) => {
+    console.log(req.user);
+    const product = await Product.find({userId:req.user.user._id});
     if (product.length > 0) {
-        res.send(product)
+        res.send(product);
     } else {
         res.json({ message: 'No Products Found' })
     }
@@ -110,15 +111,30 @@ app.put("/update/:id", async (req, res) => {
 app.get("/search/:key", async (req, res) => {
     let result = await Product.find({
         "$or": [
-            { name: { $regex: req.params.key } },
-            { price: { $regex: req.params.key } },
-            { category: { $regex: req.params.key } },
-            { company: { $regex: req.params.key } },
-            { colour: { $regex: req.params.key } }
+            { name: { $regex: req.params.key, $options: 'i' } },
+            { price: { $regex: req.params.key, $options: 'i' } },
+            { category: { $regex: req.params.key, $options: 'i' } },
+            { company: { $regex: req.params.key, $options: 'i' } },
+            { colour: { $regex: req.params.key, $options: 'i' } }
         ]
     });
-    res.send({ result });
+    res.send(result);
 })
+
+// function verifyToken(req, res, next) {
+//     let token = req.headers['authorization'];
+//     console.log(token)
+//     if (token) {
+//         token = token.split(' ')[1];
+//         console.log(token);
+//         const verifiedToken = JWT.verify(token, SECRETKEY);
+//         console.log(verifiedToken);
+//         next();
+//     }
+//     else {
+//         res.send('Something error with token')
+//     }
+// }
 
 app.listen(5000);
 

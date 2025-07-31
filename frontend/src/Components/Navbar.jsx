@@ -7,18 +7,24 @@ import DeleteDialog from "./DeleteDialog";
 const Navbar = () => {
     const authentication = localStorage.getItem("user");
     const auth = JSON.parse(localStorage.getItem("user"));
-    // console.log(auth.user.name)
+    // console.log(auth.result.name);
+    // return;
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [spinner, setSpinner] = useState(false)
 
-    function OpenDialog(){
+    function OpenDialog() {
         setOpen(true);
     }
     function logout() {
-        console.log("Logout Function")
-        localStorage.clear();
+        console.log("Logout Function");
+        setSpinner(true);
         setOpen(false);
-        navigate("/login");
+        setTimeout(() => {
+            localStorage.clear();
+            setSpinner(false);
+            navigate("/login");
+        }, 3000);
     }
     return (
         <div>
@@ -52,7 +58,7 @@ const Navbar = () => {
                                             </DialogTitle>
                                             <div className="mt-2">
                                                 <p className="text-sm text-gray-500">
-                                                   Are you sure you want to log out of your account? You will be signed out and won't be able to access any resources until you log in again.
+                                                    Are you sure you want to log out of your account? You will be signed out and won't be able to access any resources until you log in again.
 
                                                 </p>
                                             </div>
@@ -63,7 +69,7 @@ const Navbar = () => {
                                     <button
                                         type="button"
                                         onClick={logout}
-                                        className="bg-red-600 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inse sm:mt-0 sm:w-auto ml-3 "
+                                        className="bg-red-600 mt-3 inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inse sm:mt-0 sm:w-auto ml-3 "
                                     >
                                         Yes
                                     </button>
@@ -83,6 +89,22 @@ const Navbar = () => {
             </div>}
 
             <nav className="bg-gray-800">
+                {spinner && <div
+                    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+                    style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.8)",
+                        zIndex: 1050,
+                    }}
+                >
+                    <div
+                        className="spinner-grow text-primary"
+                        style={{ width: "5rem", height: "5rem" }}
+                        role="status"
+                    >
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>}
+
                 {/* <DeleteDialog props={open} /> */}
                 <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <div className="relative flex h-16 items-center justify-between">
@@ -110,7 +132,7 @@ const Navbar = () => {
                                             <div> <Link to="/" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home Page</Link>
                                                 <Link to="/add" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Add Product</Link>
                                                 <Link to="/update" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Update</Link>
-                                                <button onClick={OpenDialog} className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Logout ({auth.user.name})</button> </div>
+                                                <button onClick={OpenDialog} className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Logout ({auth.result.name})</button> </div>
                                             :
                                             <div>
                                                 <Link to="/login" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Login</Link>

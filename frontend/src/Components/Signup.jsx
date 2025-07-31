@@ -57,6 +57,7 @@ export default function LoginPage() {
                 if (response.result && response.result.name) {
                     console.log("Inside if")
                     localStorage.setItem("user", JSON.stringify(response));
+                    localStorage.setItem("token",JSON.stringify(response.token))
                     setShowLoader(false);
                     // navigate("/");
                     navigate("/", { state: { message: "Login Successful" } });
