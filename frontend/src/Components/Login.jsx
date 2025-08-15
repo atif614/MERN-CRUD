@@ -56,12 +56,14 @@ export default function LoginPage() {
         console.log(result)
         if (result.result && result.token) {
           // alert("Login successful!");
+          console.log(result);
+          setShowLoader(false);
           localStorage.setItem("user", JSON.stringify(result));
           localStorage.setItem("token",JSON.stringify(result.token))
-          setShowLoader(false);
           // navigate("/");
           navigate("/", { state: { message: "Login Successful" } });
         } else {
+          console.log("Inisnde Else")
           setShowLoader(false);
           // setError("Invalid email or password.");
           // notify(result.error);

@@ -34,6 +34,7 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
     const data = req.body;
+    console.log(data)
     if (!data || Object.keys(data).length === 0) {
         return res.status(400).json({ error: 'Request body is empty' });
     }
@@ -41,13 +42,25 @@ app.post("/login", async (req, res) => {
     if (!req.body.password || !req.body.email) {
         return res.status(400).json({ error: 'Missing required fields: email or password' });
     }
-    let result = await User.findOne(req.body).select("-password");
-    if (result) {
-        const token = JWT.sign({ result }, SECRETKEY, { expiresIn: '1h' });
-        res.json({ result, token });
+    let result = await User.findOne({ email: req.body.email });
+    console.log(result.password);
+    let count = 0;
+    if (result.password != req.body.password) {
+        count++;
+        console.log(count,"<---------");
+        if (count == 3) {
+            return res.json({ error: 'Your Account has been blocked due to multiple attempts' });
+        }
     }
     else {
-        return res.json({ error: 'Invalid Credential' });
+        let result = await User.findOne({ email: req.body.email });
+        if (result) {
+            const token = JWT.sign({ result }, SECRETKEY, { expiresIn: '1h' });
+            res.json({ result, token });
+        }
+        else {
+            return res.json({ error: 'Invalid Credential' });
+        }
     }
 })
 
@@ -79,7 +92,7 @@ app.post("/add-product", fetchUser, async (req, res) => {
 
 app.get("/getProducts", fetchUser, async (req, res) => {
     console.log(req.user);
-    const product = await Product.find({userId:req.user.user._id});
+    const product = await Product.find({ userId: req.user.user._id });
     if (product.length > 0) {
         res.send(product);
     } else {
@@ -87,12 +100,12 @@ app.get("/getProducts", fetchUser, async (req, res) => {
     }
 })
 
-app.delete("/product/:id",fetchUser, async (req, res) => {
+app.delete("/product/:id", fetchUser, async (req, res) => {
     const result = await Product.deleteOne({ _id: req.params.id })
     res.send(result);
 })
 
-app.get("/product/:id",fetchUser, async (req, res) => {
+app.get("/product/:id", fetchUser, async (req, res) => {
     let result = await Product.findOne({ _id: req.params.id });
     if (result) {
         res.json({ result })
@@ -102,7 +115,7 @@ app.get("/product/:id",fetchUser, async (req, res) => {
     }
 
 })
-app.put("/update/:id",fetchUser, async (req, res) => {
+app.put("/update/:id", fetchUser, async (req, res) => {
     let result = await Product.updateOne(
         { _id: req.params.id },
         {
@@ -112,7 +125,7 @@ app.put("/update/:id",fetchUser, async (req, res) => {
     res.json({ result });
 })
 
-app.get("/search/:key",fetchUser, async (req, res) => {
+app.get("/search/:key", fetchUser, async (req, res) => {
     const userId = req.user.user._id;
     let result = await Product.find({
         userId: userId,
@@ -127,10 +140,10 @@ app.get("/search/:key",fetchUser, async (req, res) => {
     res.send(result);
 })
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,()=>{
-    console.log("Connected to the Server",PORT)
+app.listen(PORT, () => {
+    console.log("Connected to the Server", PORT)
 });
 
 
