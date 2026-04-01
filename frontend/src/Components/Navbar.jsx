@@ -132,7 +132,7 @@ const Navbar = () => {
                                         auth ?
                                             <div> <Link to="/" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home Page</Link>
                                                 <Link to="/add" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Add Product</Link>
-                                                <Link to="/update" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Update</Link>
+                                                {/* <Link to="/update" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Update</Link> */}
                                                 <button onClick={OpenDialog} className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"> {auth ? `Logout (${auth.Myresult.name})` : ""}  </button> </div>
                                             :
                                             <div>

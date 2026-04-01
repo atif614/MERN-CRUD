@@ -61,7 +61,7 @@ export default function LoginPage() {
           localStorage.setItem("user", JSON.stringify(result));
           localStorage.setItem("token",JSON.stringify(result.token))
           // navigate("/");
-          navigate("/", { state: { message: "Login Successful" } });
+          navigate("/", { state: { message: "Login Successfully" } });
         } else {
           console.log("Inisnde Else")
           setShowLoader(false);

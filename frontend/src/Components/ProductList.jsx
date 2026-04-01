@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import generatePDF from "./generatePDF";
 
 const ProductList = () => {
     const [data, setData] = useState([]);
@@ -78,7 +79,7 @@ const ProductList = () => {
             <ToastContainer />
             <div className="pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">Search</label>
-                <div className="flex justify-center items-center mt-5">
+                <div className="flex justify-center items-center mt-2 mb- -mb-4">
                     <div className="relative w-80">
 
                         {/* 🔍 Icon */}
@@ -103,7 +104,7 @@ const ProductList = () => {
                         <input
                             type="text"
                             id="table-search"
-                            className="w-full pl-10 pr-4 py-3 text-sm text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full pl-3 pr-4 py-3 text-sm text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                             placeholder="Search for items"
                             onChange={SearchHandler}
                         />
@@ -166,14 +167,16 @@ const ProductList = () => {
                                         {/* <a> */}
                                         <button type="button" onClick={() => deleteProduct(product._id)} className="btn btn-success">Delete</button>
                                         <Link to={"/update/" + product._id}> <button type="button" className="ml-4 btn btn-secondary">Update</button></Link>
+                                        <button type="button" onClick={() => generatePDF(data)} className="btn btn-primary ml-4">Download</button>
                                         {/* </a> */}
                                     </td>
                                 </tr>
                             );
-                        }) : <>No Products to Display</>
+                        }) : <h1 style={{ textAlign: "center" }}>No Products to Display</h1>
                     }
                 </tbody>
             </table>
+
         </div>
     )
 }
