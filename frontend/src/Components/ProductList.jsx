@@ -31,7 +31,7 @@ const ProductList = () => {
     }, [location.state]);
 
     async function getData() {
-        let result = await fetch("http://localhost:8000/getProducts", {
+        let result = await fetch("https://mern-crud-1-5cml.onrender.com/getProducts", {
             headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
             }
@@ -42,7 +42,7 @@ const ProductList = () => {
 
     }
     async function deleteProduct(id) {
-        let result = await fetch(`http://localhost:8000/product/${id}`, {
+        let result = await fetch(`https://mern-crud-1-5cml.onrender.com/product/${id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
@@ -57,7 +57,7 @@ const ProductList = () => {
         // console.log(event.target.value);
         let key = event.target.value;
         if (key) {
-            let result = await fetch(`http://localhost:8000/search/${key}`, {
+            let result = await fetch(`https://mern-crud-1-5cml.onrender.com/search/${key}`, {
                 headers: {
                     Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
                 }

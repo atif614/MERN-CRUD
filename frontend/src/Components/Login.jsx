@@ -45,7 +45,7 @@ export default function LoginPage() {
         return;
       }
       else {
-        let result = await fetch("http://localhost:8000/login", {
+        let result = await fetch("https://mern-crud-1-5cml.onrender.com/login", {
           method: 'POST',
           body: JSON.stringify({ email, password }),
           headers: {

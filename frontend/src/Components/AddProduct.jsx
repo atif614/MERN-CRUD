@@ -47,7 +47,7 @@ const AddProduct = () => {
             console.log(userId.Myresult._id);
             // return;
             userId = userId.Myresult._id;
-            let result = await fetch("http://localhost:8000/add-product", {
+            let result = await fetch("https://mern-crud-1-5cml.onrender.com/add-product", {
                 method: 'POST',
                 body: JSON.stringify({ name, price, category, colour, company,userId }),
                 headers: {

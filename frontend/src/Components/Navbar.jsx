@@ -26,7 +26,7 @@ const Navbar = () => {
             navigate("/login");
         }, 3000);
     }
-    
+
     return (
         <div>
             {(authentication && open) && <div>

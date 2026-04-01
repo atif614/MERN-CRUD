@@ -43,7 +43,7 @@ export default function LoginPage() {
                 return;
             }
             else {
-                let result = await fetch("http://localhost:8000/register", {
+                let result = await fetch("https://mern-crud-1-5cml.onrender.com/register", {
                     method: 'POST',
                     body: JSON.stringify({ name, email, password }),
                     headers: {
