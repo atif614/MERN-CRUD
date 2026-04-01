@@ -38,7 +38,7 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowLoader(true);
-
+    
     setTimeout(async () => {  
       if (!email || !password) {
         setError("Please enter both email and password.");
@@ -54,7 +54,7 @@ export default function LoginPage() {
         })
         result = await result.json();
         console.log(result)
-        if (result.result && result.token) {
+        if (result.Myresult && result.token) {
           // alert("Login successful!");
           console.log(result);
           setShowLoader(false);

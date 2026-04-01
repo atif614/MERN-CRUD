@@ -41,6 +41,7 @@ const AddProduct = () => {
     }
 
     const getData = async () => {
+        console.log("Inside GetData Functions");
         setTimeout(async () => {
             let userId = JSON.parse(localStorage.getItem('user'));
             console.log(userId.Myresult._id);
@@ -55,6 +56,7 @@ const AddProduct = () => {
                 }
             })
             result = await result.json();
+            setShowLoader(false);
             if (result) {
                 setShowLoader(false);
                 setToaster(true);

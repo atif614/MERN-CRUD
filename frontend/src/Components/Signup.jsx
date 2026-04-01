@@ -60,7 +60,7 @@ export default function LoginPage() {
                     localStorage.setItem("token",JSON.stringify(response.token))
                     setShowLoader(false);
                     // navigate("/");
-                    navigate("/", { state: { message: "Login Successful" } });
+                    navigate("/", { state: { message: "Account Created Successfully" } });
                 } else if (result.status == 400) {
                     console.log("Inside Else")
                     setShowLoader(false);

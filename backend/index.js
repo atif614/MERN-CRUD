@@ -31,7 +31,7 @@ app.post("/register", async (req, res) => {
     result = new User(req.body);
     console.log(result)
     let Myresult = await result.save();
-    const token = JWT.sign({ result }, SECRETKEY, { expiresIn: '1h' });
+    const token = JWT.sign({ Myresult }, SECRETKEY, { expiresIn: '1h' });
     delete Myresult.password;
     res.json({ Myresult, token });
 })
@@ -46,36 +46,29 @@ app.post("/login", async (req, res) => {
     if (!req.body.password || !req.body.email) {
         return res.status(400).json({ error: 'Missing required fields: email or password' });
     }
-    let result = await User.findOne({ email: req.body.email });
-    console.log("------>Result",result);
-    let count = 0;
+    let Myresult = await User.findOne({ email: req.body.email });
 
-    if (result ?? result.password != req.body.password) {
-        count++;
-        console.log(count,"<---------");
-        if (count == 3) {
-            return res.json({ error: 'Your Account has been blocked due to multiple attempts' });
-        }
-    }   
-    else {
-        let result = await User.findOne({ email: req.body.email });
-        if (result) {
-            const token = JWT.sign({ result }, SECRETKEY, { expiresIn: '1h' });
+        if (Myresult) {
+            const token = JWT.sign({ Myresult }, SECRETKEY, { expiresIn: '1h' });
             console.log(token);
-            res.json({ result, token });
+            res.json({ Myresult, token });
         }
         else {
             return res.json({ error: 'Invalid Credential' });
         }
-    }
+    
 })
 
 app.post("/add-product", fetchUser, async (req, res) => {
     let product = new Product(req.body);
     let result = await product.save();
-     if (result.userId.toString() !== req.user.id) {
-            return res.status(401).send('Not Allowed');
-        }
+    console.log("Result", result);
+    console.log(req.user);
+    console.log(req.user._id);
+    console.log(result._id);
+    //  if (result.userId.toString() !== req.user.id) {
+    //         return res.status(401).send('Not Allowed');
+    // }
     const formattedCreatedAt = new Date(product.createdAt).toLocaleString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -97,8 +90,8 @@ app.post("/add-product", fetchUser, async (req, res) => {
 })
 
 app.get("/getProducts", fetchUser, async (req, res) => {
-    console.log("------->",req.user.result._id);
-    const product = await Product.find({ userId: req.user.result._id });
+    console.log("------->",req.user.Myresult);
+    const product = await Product.find({ userId: req.user.Myresult._id });
     if (product.length > 0) {
         res.send(product);
     } else {
@@ -132,7 +125,8 @@ app.put("/update/:id", fetchUser, async (req, res) => {
 })
 
 app.get("/search/:key", fetchUser, async (req, res) => {
-    const userId = req.user.user._id;
+    console.log(req.user.Myresult._id);
+    const userId = req.user.Myresult._id;
     let result = await Product.find({
         userId: userId,
         "$or": [
