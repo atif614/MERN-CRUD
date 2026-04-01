@@ -7,8 +7,8 @@ import DeleteDialog from "./DeleteDialog";
 const Navbar = () => {
     const authentication = localStorage.getItem("user");
     const auth = JSON.parse(localStorage.getItem("user"));
+    console.log(auth.Myresult)
     // console.log(auth.result.name);
-    // return;
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [spinner, setSpinner] = useState(false)
@@ -26,15 +26,16 @@ const Navbar = () => {
             navigate("/login");
         }, 3000);
     }
+    
     return (
         <div>
             {(authentication && open) && <div>
-                {/* <button
+                <button
                     onClick={() => setOpen(true)}
                     className="rounded-md bg-gray-950/5 px-2.5 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-950/10"
                 >
                     Open dialog
-                </button> */}
+                </button>
                 <Dialog open={open} onClose={setOpen} className="relative z-10">
                     <DialogBackdrop
                         transition
@@ -132,7 +133,7 @@ const Navbar = () => {
                                             <div> <Link to="/" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home Page</Link>
                                                 <Link to="/add" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Add Product</Link>
                                                 <Link to="/update" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Update</Link>
-                                                <button onClick={OpenDialog} className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Logout ({auth.result.name})</button> </div>
+                                                <button onClick={OpenDialog} className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Logout ({auth.Myresult.name})</button> </div>
                                             :
                                             <div>
                                                 <Link to="/login" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Login</Link>

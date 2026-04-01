@@ -11,6 +11,10 @@ app.use(cors());
 require('dotenv').config();
 const fetchUser = require("./middleware/fetchUser");
 
+app.get('/getData',(req,res)=>{
+    res.send({message:'My message from an  api'})
+})
+
 app.post("/register", async (req, res) => {
     const data = req.body;
     if (!data || Object.keys(data).length === 0) {
@@ -20,21 +24,21 @@ app.post("/register", async (req, res) => {
     if (!req.body.name || !req.body.password || !req.body.email) {
         return res.status(400).json({ error: 'Missing required fields: name or email' });
     }
-    let user = await User.findOne({ email: req.body.email });
-    if (user) {
+    let result = await User.findOne({ email: req.body.email });
+    if (result) {
         return res.status(400).json({ error: 'Sorry a user with this email already exists' });
     }
-    user = new User(req.body);
-    console.log(user)
-    let result = await user.save();
-    const token = JWT.sign({ user }, SECRETKEY, { expiresIn: '1h' });
-    delete result.password;
-    res.json({ result, token });
+    result = new User(req.body);
+    console.log(result)
+    let Myresult = await result.save();
+    const token = JWT.sign({ result }, SECRETKEY, { expiresIn: '1h' });
+    delete Myresult.password;
+    res.json({ Myresult, token });
 })
 
 app.post("/login", async (req, res) => {
     const data = req.body;
-    console.log(data)
+    // console.log(data)
     if (!data || Object.keys(data).length === 0) {
         return res.status(400).json({ error: 'Request body is empty' });
     }
@@ -43,19 +47,21 @@ app.post("/login", async (req, res) => {
         return res.status(400).json({ error: 'Missing required fields: email or password' });
     }
     let result = await User.findOne({ email: req.body.email });
-    console.log(result.password);
+    console.log("------>Result",result);
     let count = 0;
-    if (result.password != req.body.password) {
+
+    if (result ?? result.password != req.body.password) {
         count++;
         console.log(count,"<---------");
         if (count == 3) {
             return res.json({ error: 'Your Account has been blocked due to multiple attempts' });
         }
-    }
+    }   
     else {
         let result = await User.findOne({ email: req.body.email });
         if (result) {
             const token = JWT.sign({ result }, SECRETKEY, { expiresIn: '1h' });
+            console.log(token);
             res.json({ result, token });
         }
         else {
@@ -67,9 +73,9 @@ app.post("/login", async (req, res) => {
 app.post("/add-product", fetchUser, async (req, res) => {
     let product = new Product(req.body);
     let result = await product.save();
-    //  if (result.userId.toString() !== req.user.id) {
-    //         return res.status(401).send('Not Allowed');
-    //     }
+     if (result.userId.toString() !== req.user.id) {
+            return res.status(401).send('Not Allowed');
+        }
     const formattedCreatedAt = new Date(product.createdAt).toLocaleString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -91,8 +97,8 @@ app.post("/add-product", fetchUser, async (req, res) => {
 })
 
 app.get("/getProducts", fetchUser, async (req, res) => {
-    console.log(req.user);
-    const product = await Product.find({ userId: req.user.user._id });
+    console.log("------->",req.user.result._id);
+    const product = await Product.find({ userId: req.user.result._id });
     if (product.length > 0) {
         res.send(product);
     } else {
@@ -142,7 +148,7 @@ app.get("/search/:key", fetchUser, async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(8000, () => {
     console.log("Connected to the Server", PORT)
 });
 

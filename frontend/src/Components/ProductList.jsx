@@ -30,18 +30,18 @@ const ProductList = () => {
     }, [location.state]);
 
     async function getData() {
-        let result = await fetch("http://localhost:5000/getProducts", {
+        let result = await fetch("http://localhost:8000/getProducts", {
             headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
             }
         });
         result = await result.json();
-        console.log(result)
+        // console.log(result)
         setData(result);
 
     }
     async function deleteProduct(id) {
-        let result = await fetch(`http://localhost:5000/product/${id}`, {
+        let result = await fetch(`http://localhost:8000/product/${id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
@@ -53,16 +53,16 @@ const ProductList = () => {
         }
     }
     async function SearchHandler(event) {
-        console.log(event.target.value);
+        // console.log(event.target.value);
         let key = event.target.value;
         if (key) {
-            let result = await fetch(`http://localhost:5000/search/${key}`,{
+            let result = await fetch(`http://localhost:8000/search/${key}`,{
                 headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
             }
             });
             result = await result.json();
-            console.log(result);
+            // console.log(result);
             if (result) {
                 setData(result);
             }
@@ -72,7 +72,7 @@ const ProductList = () => {
         }
 
     }
-    console.log(data)
+    // console.log(data);
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <ToastContainer />

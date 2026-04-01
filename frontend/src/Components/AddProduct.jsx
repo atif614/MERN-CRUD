@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
+    console.log("Add Product Component");
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
@@ -12,7 +13,7 @@ const AddProduct = () => {
     const [company, setCompany] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [toaster, setToaster] = useState(false);
-    const location = useLocation();
+    // const location = useLocation();
     const navigate = useNavigate();
     const notify = (message, type = "default") => {
         switch (type) {
@@ -42,10 +43,10 @@ const AddProduct = () => {
     const getData = async () => {
         setTimeout(async () => {
             let userId = JSON.parse(localStorage.getItem('user'));
-            console.log(userId.result._id);
+            console.log(userId.Myresult._id);
             // return;
-            userId = userId.result._id;
-            let result = await fetch("http://localhost:5000/add-product", {
+            userId = userId.Myresult._id;
+            let result = await fetch("http://localhost:8000/add-product", {
                 method: 'POST',
                 body: JSON.stringify({ name, price, category, colour, company,userId }),
                 headers: {
@@ -190,7 +191,7 @@ const AddProduct = () => {
                     </div>}
                 </button>
                 {
-                    setToaster ?? <ToastContainer />
+                    toaster ?? <ToastContainer />
                 }
             </form>
         </div>

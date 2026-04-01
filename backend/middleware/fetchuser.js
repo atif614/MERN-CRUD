@@ -15,22 +15,21 @@ const fetchUser = (req, res, next) => {
     // next();
     try {
         const authHeader = req.header("authorization");
-        console.log(authHeader);
+        console.log("authHeader",authHeader);
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return res.status(401).json({ error: 'No or malformed token provided' });
         }
         const token = authHeader.split(' ')[1];
-        // 🔐 Verify the token
-        const decoded = jwt.verify(token, SECRETKEY); // throws if expired or invalid
+        // Verify the token
+        const decoded = jwt.verify(token, SECRETKEY); 
+        console.log("<-------------------",decoded)
         req.user = decoded; // Attach user info to request
-        console.log(decoded);
-        console.log(req.user.user._id);
-        // return;
+        console.log("--------------->",decoded)
         next();
 
     } catch (err) {
         // 🔍 Specific error handling
-        // console.log("Error",err)
+        console.log("Error", err)
         if (err.name === 'TokenExpiredError') {
             return res.status(401).json({ error: 'Token expired. Please login again.' });
         } else if (err.name === 'JsonWebTokenError') {
@@ -41,4 +40,4 @@ const fetchUser = (req, res, next) => {
         }
     }
 }
-    module.exports = fetchUser;
+module.exports = fetchUser;

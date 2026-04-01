@@ -39,13 +39,13 @@ export default function LoginPage() {
     e.preventDefault();
     setShowLoader(true);
 
-    setTimeout(async () => {
+    setTimeout(async () => {  
       if (!email || !password) {
         setError("Please enter both email and password.");
         return;
       }
       else {
-        let result = await fetch("http://localhost:5000/login", {
+        let result = await fetch("http://localhost:8000/login", {
           method: 'POST',
           body: JSON.stringify({ email, password }),
           headers: {
@@ -70,18 +70,13 @@ export default function LoginPage() {
           notify(result.error, "error");
         }
       }
-    }, 5000); 
+    }, 8000); 
   };
 
   return (
     <div className="flex items-center justify-center mt-14 bg-white overflow-hidden">
       <div className="w-full max-w-sm px-6">
         <div className="flex flex-col items-center">
-          <img
-            alt="Your Company"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-            className="h-10 w-auto"
-          />
           <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">
             Login in to your account
           </h2>
@@ -124,7 +119,7 @@ export default function LoginPage() {
           </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <ToastContainer position="top-right" autoClose={5000} />
+          <ToastContainer position="top-right" autoClose={8000} />
 
           <button
             type="submit"

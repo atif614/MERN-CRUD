@@ -21,7 +21,7 @@ const UpdateProduct = () => {
     const navigate = useNavigate();
 
     const getProductData = async () => {
-        let result = await fetch("http://localhost:5000/product/" + params.id,{
+        let result = await fetch("http://localhost:8000/product/" + params.id,{
             headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
             }
@@ -38,7 +38,7 @@ const UpdateProduct = () => {
         e.preventDefault();
         setShowLoader(true);
         setTimeout(async () => {
-            let result = await fetch(`http://localhost:5000/update/${params.id}`, {
+            let result = await fetch(`http://localhost:8000/update/${params.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({ name, price, category, company, colour}),
                 headers: {

@@ -43,7 +43,7 @@ export default function LoginPage() {
                 return;
             }
             else {
-                let result = await fetch("http://localhost:5000/register", {
+                let result = await fetch("http://localhost:8000/register", {
                     method: 'POST',
                     body: JSON.stringify({ name, email, password }),
                     headers: {
@@ -52,9 +52,9 @@ export default function LoginPage() {
                 })
                 console.log(result);
                 let response = await result.json();
-                console.log(response.error);
-                console.log(result.status);
-                if (response.result && response.result.name) {
+                console.log(response);
+                // console.log(result.Myresult);
+                if (response.Myresult && response.Myresult.name) {
                     console.log("Inside if")
                     localStorage.setItem("user", JSON.stringify(response));
                     localStorage.setItem("token",JSON.stringify(response.token))
@@ -67,18 +67,18 @@ export default function LoginPage() {
                     notify(response.error, "error");
                 }
             }
-        }, 5000);
+        }, 8000);
     };
 
     return (
         <div className="flex items-center justify-center mt-14 bg-white overflow-hidden">
             <div className="w-full max-w-sm px-6">
                 <div className="flex flex-col items-center">
-                    <img
+                    {/* <img
                         alt="Your Company"
                         src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                         className="h-10 w-auto"
-                    />
+                    /> */}
                     <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">
                         Sign in to your account
                     </h2>
@@ -135,7 +135,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
-                    <ToastContainer position="top-right" autoClose={5000} />
+                    <ToastContainer position="top-right" autoClose={8000} />
 
                     <button
                         type="submit"

@@ -6,7 +6,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 export default function DeleteDialog({props}) {
 //   const [open, setOpen] = useState(true);
-console.log(open)
+// console.log(open)
 
   return (
     <div>
