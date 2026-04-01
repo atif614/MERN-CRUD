@@ -11,7 +11,7 @@ const UpdateProduct = () => {
     const [company, setCompany] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [toaster, setToaster] = useState(false);
-    const notify = () => toast("Wow so easy!");
+    const notify = () => toast("Product Updated Successfully!");
     const params = useParams();
 
     useEffect(() => {
