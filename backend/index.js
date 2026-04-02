@@ -47,8 +47,7 @@ app.post("/login", async (req, res) => {
         return res.status(400).json({ error: 'Missing required fields: email or password' });
     }
     let Myresult = await User.findOne({ email: req.body.email });
-
-        if (Myresult) {
+        if (Myresult && Myresult.password==req.body.password) {
             const token = JWT.sign({ Myresult }, SECRETKEY, { expiresIn: '1h' });
             console.log(token);
             res.json({ Myresult, token });
